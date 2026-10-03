@@ -1,4 +1,80 @@
-:root {
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Surface & Canvas Hierarchy */
+    --surface-canvas: #f8fafc;
+    --surface-card: #ffffff;
+    --surface-hover: #f1f5f9;
+    --surface-dim: #f1f5f9;
+    --surface-high: #e2e8f0;
+    --surface-highest: #cbd5e1;
+
+    /* Text & Content */
+    --on-surface: #0f172a;
+    --on-surface-variant: #475569;
+    --on-surface-muted: #94a3b8;
+
+    /* Primary Accent */
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-container: #eff6ff;
+    --on-primary: #ffffff;
+
+    /* Status & Feedback Accents */
+    --accent-success: #10b981;
+    --accent-success-container: #ecfdf5;
+    --on-accent-success: #047857;
+
+    --accent-warning: #f59e0b;
+    --accent-warning-container: #fffbeb;
+    --on-accent-warning: #b45309;
+
+    --accent-error: #ef4444;
+    --accent-error-container: #fef2f2;
+    --on-accent-error: #b91c1c;
+
+    /* Micro-borders & Outlines */
+    --outline: #e2e8f0;
+    --outline-variant: #cbd5e1;
+    --outline-focus: #2563eb;
+  }
+
+  body {
+    background-color: var(--surface-canvas);
+    color: var(--on-surface);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+}
+
+/* Elevation & Shadows from DESIGN.md */
+.shadow-level-1 {
+  box-shadow: 0px 1px 3px rgba(15, 23, 42, 0.04), 0px 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+.shadow-level-2 {
+  box-shadow: 0px 12px 24px -4px rgba(15, 23, 42, 0.08), 0px 4px 6px -2px rgba(15, 23, 42, 0.03);
+}
+
+.shadow-level-3 {
+  box-shadow: 0px 20px 25px -5px rgba(15, 23, 42, 0.1), 0px 8px 10px -6px rgba(15, 23, 42, 0.04);
+}
+
+/* Custom Focus Ring Halo */
+.focus-halo {
+  outline: none;
+  transition: all 0.15s ease-in-out;
+}
+
+.focus-halo:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* :root {
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
@@ -108,4 +184,4 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
-}
+} */
