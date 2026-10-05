@@ -4,6 +4,8 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { AdminLayout } from '../components/layout/AdminLayout';
 import { LoginPage } from '../pages/auth/LoginPage';
 
+
+
 // Module Pages
 import { DashboardPage } from '../pages/dashboard/DashboardPage';
 import { AboutPage } from '../pages/about/AboutPage';
@@ -17,12 +19,44 @@ import { BlogListPage } from '../pages/blogs/BlogListPage';
 import { BlogEditorPage } from '../pages/blogs/BlogEditorPage';
 import { ContactInboxPage } from '../pages/contact/ContactInboxPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
+import HomePage from '../pages/portfolio/HomePage';
+import { PortfolioLayout } from '../components/portfolio/PortfolioLayout';
+import ProjectsArchivePage from '../pages/portfolio/ProjectsArchivePage';
+import ProjectDetailPage from '../pages/portfolio/ProjectDetailPage';
+import BlogArchivePage from '../pages/portfolio/BlogArchivePage';
+import BlogDetailPage from '../pages/portfolio/BlogDetailPage';
+import ContactPage from '../pages/portfolio/ContactPage';
 
 export function AppRoutes() {
   return (
     <Routes>
       {/* Root redirects */}
-      <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+     {/* <Route path="/" element={ <HomePage /> } /> */}
+
+           {/* ------------------------------------------------------------------ */}
+      {/* Public Portfolio Engine (Multi-Page Client Showcase)              */}
+      {/* ------------------------------------------------------------------ */}
+      <Route element={<PortfolioLayout />}>
+        {/* Landing Page */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* Projects Engine */}
+        <Route path="/projects" element={<ProjectsArchivePage />} />
+        <Route path="/projects/:slug" element={<ProjectDetailPage />} />
+
+        {/* Technical Blog Engine */}
+        <Route path="/blogs" element={<BlogArchivePage />} />
+        <Route path="/blogs/:slug" element={<BlogDetailPage />} />
+
+        {/* Direct Inquiries & Contact View */}
+        <Route path="/contact" element={<ContactPage />} />
+
+        {/* 404 Fallback Inside Public Layout */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+     {/* <Route path="/" element={} /> */}
+      {/* <Route path="/projects/:slug" element={} /> */}
+      {/* <Route path="/blogs/:slug" element={} /> */}
       <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
       {/* Public Auth Route */}

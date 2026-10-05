@@ -25,3 +25,4 @@ dist-ssr
 .env
 FRONTEND_CMS.md
 DESIGN.md
+*.md
