@@ -10,7 +10,29 @@
 
 @layer base {
   :root {
-    /* Surface & Canvas Hierarchy */
+    /* ---------------------------------------------------------------------- */
+    /* Warm Editorial Craft (The Technical Monograph) Design Tokens           */
+    /* ---------------------------------------------------------------------- */
+    --canvas-base: #FAF8F5;
+    --paper-card: #FFFFFF;
+    --paper-inset: #F4EFEA;
+    --paper-hover: #EFECE6;
+    --border-hairline: #E7E2DA;
+    --border-hairline-hover: #D6CFC4;
+
+    --ink-primary: #141416;
+    --ink-secondary: #44403C;
+    --ink-muted: #78716C;
+    --ink-faint: #A8A29E;
+
+    --accent-terracotta: #C2410C;
+    --accent-terracotta-tint: #FFF7ED;
+    --accent-ochre: #D97706;
+    --accent-ochre-tint: #FEF3C7;
+    --accent-live: #16A34A;
+    --accent-live-tint: #DCFCE7;
+
+    /* Admin CMS Backward Compatibility Tokens */
     --surface-canvas: #f8fafc;
     --surface-card: #ffffff;
     --surface-hover: #f1f5f9;
@@ -18,18 +40,15 @@
     --surface-high: #e2e8f0;
     --surface-highest: #cbd5e1;
 
-    /* Text & Content */
     --on-surface: #0f172a;
     --on-surface-variant: #475569;
     --on-surface-muted: #94a3b8;
 
-    /* Primary Accent */
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-container: #eff6ff;
     --on-primary: #ffffff;
 
-    /* Status & Feedback Accents */
     --accent-success: #10b981;
     --accent-success-container: #ecfdf5;
     --on-accent-success: #047857;
@@ -42,7 +61,6 @@
     --accent-error-container: #fef2f2;
     --on-accent-error: #b91c1c;
 
-    /* Micro-borders & Outlines */
     --outline: #e2e8f0;
     --outline-variant: #cbd5e1;
     --outline-focus: #2563eb;
@@ -51,11 +69,102 @@
   body {
     background-color: var(--surface-canvas);
     color: var(--on-surface);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
   }
+}
+
+/* Portfolio Font Classes */
+.font-serif {
+  font-family: 'Newsreader', 'Instrument Serif', Georgia, serif;
+}
+
+.font-sans {
+  font-family: 'Geist', 'Inter', -apple-system, sans-serif;
+}
+
+.font-mono, .font-code {
+  font-family: 'Geist Mono', 'JetBrains Mono', Menlo, monospace;
+}
+
+/* Hairline borders */
+.border-hairline {
+  border-color: var(--border-hairline);
+}
+
+.hover-border-hairline:hover {
+  border-color: var(--border-hairline-hover);
+}
+
+/* Smooth Editorial Image & Card Hover */
+.editorial-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(20, 20, 22, 0.06);
+  border-color: var(--border-hairline-hover);
+}
+
+/* Tactile Spring Buttons */
+.btn-press {
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-press:active {
+  transform: scale(0.96);
+}
+
+/* Editorial Paper Inset */
+.bg-canvas {
+  background-color: var(--canvas-base);
+}
+
+.bg-paper {
+  background-color: var(--paper-card);
+}
+
+.bg-paper-inset {
+  background-color: var(--paper-inset);
+}
+
+.bg-paper-hover:hover {
+  background-color: var(--paper-hover);
+}
+
+.text-ink-primary {
+  color: var(--ink-primary);
+}
+
+.text-ink-secondary {
+  color: var(--ink-secondary);
+}
+
+.text-ink-muted {
+  color: var(--ink-muted);
+}
+
+.text-ink-faint {
+  color: var(--ink-faint);
+}
+
+.text-terracotta {
+  color: var(--accent-terracotta);
+}
+
+.bg-terracotta {
+  background-color: var(--accent-terracotta);
+}
+
+.bg-terracotta-tint {
+  background-color: var(--accent-terracotta-tint);
+}
+
+.border-terracotta {
+  border-color: var(--accent-terracotta);
 }
 
 /* Elevation & Shadows from DESIGN.md */
@@ -337,4 +446,70 @@ code[class*="language-"] {
 .token.important,
 .token.variable {
   color: #fbbf24; /* Amber 400 */
+}
+
+/* -------------------------------------------------------------------------- */
+/* Warm Editorial Paper Code Inspector Theme (#F4EFEA Cream Paper Ground)     */
+/* -------------------------------------------------------------------------- */
+.paper-code-inspector pre[class*="language-"],
+.paper-code-theme pre[class*="language-"],
+.editorial-prose pre {
+  background: #F4EFEA !important;
+  color: #141416 !important;
+  border: 1px solid #E7E2DA !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 1px 3px rgba(20, 20, 22, 0.03);
+}
+
+.paper-code-inspector code[class*="language-"],
+.paper-code-theme code[class*="language-"],
+.editorial-prose code {
+  color: #141416 !important;
+}
+
+.paper-code-inspector .token.comment,
+.paper-code-theme .token.comment,
+.editorial-prose .token.comment {
+  color: #78716C !important;
+  font-style: italic;
+}
+
+.paper-code-inspector .token.punctuation,
+.paper-code-theme .token.punctuation,
+.editorial-prose .token.punctuation {
+  color: #44403C !important;
+}
+
+.paper-code-inspector .token.property,
+.paper-code-inspector .token.tag,
+.paper-code-inspector .token.constant,
+.paper-code-theme .token.property,
+.editorial-prose .token.property {
+  color: #C2410C !important; /* Terracotta */
+}
+
+.paper-code-inspector .token.string,
+.paper-code-theme .token.string,
+.editorial-prose .token.string {
+  color: #15803D !important; /* Muted Green */
+}
+
+.paper-code-inspector .token.keyword,
+.paper-code-theme .token.keyword,
+.editorial-prose .token.keyword {
+  color: #9333EA !important;
+  font-weight: 500;
+}
+
+.paper-code-inspector .token.function,
+.paper-code-theme .token.function,
+.editorial-prose .token.function {
+  color: #1E40AF !important;
+  font-weight: 500;
+}
+
+.paper-code-inspector .token.number,
+.paper-code-theme .token.number,
+.editorial-prose .token.number {
+  color: #D97706 !important; /* Ochre */
 }

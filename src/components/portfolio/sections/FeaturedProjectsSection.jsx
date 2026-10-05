@@ -1,144 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ExternalLink, FolderGit2 } from 'lucide-react';
-import { FaGithub } from 'react-icons/fa6';
+import { ArrowRight, LayoutGrid, List } from 'lucide-react';
 import { useProjects } from '../../../hooks/usePortfolio';
-import { BrowserMockup } from '../common/BrowserMockup';
-import { PastelTag } from '../common/PastelTag';
-import { TactileCard } from '../common/TactileCard';
+import { ProjectCard } from '../projects/ProjectCard';
+import { ProjectListIndex } from '../projects/ProjectListIndex';
+import { cn } from '../../../lib/utils';
 
 export function FeaturedProjectsSection() {
   const { data: projects = [], isLoading } = useProjects();
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
 
   // Ghost Section Check: Omit if zero items
   if (!isLoading && projects.length === 0) {
     return null;
   }
 
-  // Filter featured or take top 2
+  // Filter featured or take top 4
   const featured = projects
     .filter((p) => p.is_featured)
     .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
 
-  const displayList = featured.length > 0 ? featured.slice(0, 2) : projects.slice(0, 2);
+  const displayList = featured.length > 0 ? featured.slice(0, 4) : projects.slice(0, 4);
 
   return (
     <section id="projects" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700">
-            <FolderGit2 className="h-3.5 w-3.5" />
-            <span>Featured Case Studies</span>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-[#E7E2DA] pb-8">
+        <div className="space-y-3">
+          <div className="font-mono text-xs font-semibold tracking-wider text-[#78716C] uppercase">
+            // 01. SELECTED WORKS
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-[#0f172a]">
-            Highlighted Engineering Work
+          <h2 className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] font-normal tracking-tight text-[#141416]">
+            Highlighted <em className="italic font-serif text-[#C2410C]">engineering</em> platforms.
           </h2>
-          <p className="text-sm md:text-base text-slate-600 max-w-xl">
-            Selected software platforms designed with emphasis on concurrency, clean domain modeling, and scale.
+          <p className="text-sm md:text-base text-[#44403C] max-w-xl font-sans">
+            Production systems designed with an emphasis on low concurrency contention, clean domain modeling, and scale.
           </p>
         </div>
 
-        {/* View All Projects link (rendered only if > 0 projects exist) */}
-        {projects.length > 0 && (
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#0f172a] hover:text-slate-600 transition-colors group self-start md:self-auto"
-          >
-            <span>Browse All {projects.length} Projects</span>
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        )}
+        {/* View Toggle + View All Link */}
+        <div className="flex items-center gap-3 self-start md:self-auto">
+          {/* Format Selector: Segmented Pill */}
+          <div className="inline-flex items-center p-1 rounded-full bg-[#F4EFEA] border border-[#E7E2DA]">
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={cn(
+                'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer font-mono',
+                viewMode === 'grid'
+                  ? 'bg-white text-[#141416] shadow-xs'
+                  : 'text-[#78716C] hover:text-[#141416]'
+              )}
+            >
+              <LayoutGrid className="h-3.5 w-3.5" />
+              <span>Grid</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('list')}
+              className={cn(
+                'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer font-mono',
+                viewMode === 'list'
+                  ? 'bg-white text-[#141416] shadow-xs'
+                  : 'text-[#78716C] hover:text-[#141416]'
+              )}
+            >
+              <List className="h-3.5 w-3.5" />
+              <span>Editorial Index</span>
+            </button>
+          </div>
+
+          {projects.length > 0 && (
+            <Link
+              to="/projects"
+              className="btn-press inline-flex items-center gap-1 text-xs font-semibold font-sans text-[#141416] hover:text-[#C2410C] transition-colors group"
+            >
+              <span>All ({projects.length})</span>
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+            </Link>
+          )}
+        </div>
       </div>
 
-      {/* Project Cards Stack */}
-      <div className="space-y-12">
-        {displayList.map((project) => (
-          <TactileCard
-            key={project.id}
-            className="p-6 md:p-10 border-slate-200 hover:border-slate-300"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Media Browser Frame */}
-              <div className="lg:col-span-7">
-                <Link to={`/projects/${project.slug}`} className="block group">
-                  <BrowserMockup
-                    url={project.live_url || `https://${project.slug}.example.com`}
-                    imageUrl={project.thumbnail_url}
-                    alt={project.title}
-                  />
-                </Link>
-              </div>
-
-              {/* Project Meta & Details */}
-              <div className="lg:col-span-5 space-y-4">
-                {/* Tech Pills */}
-                {project.skills && project.skills.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.skills.slice(0, 4).map((skill) => (
-                      <PastelTag
-                        key={skill.id}
-                        name={skill.name}
-                        category={skill.category}
-                        iconUrl={skill.icon_url}
-                        size="sm"
-                      />
-                    ))}
-                  </div>
-                )}
-
-                <h3 className="text-2xl font-bold text-[#0f172a] tracking-tight">
-                  <Link
-                    to={`/projects/${project.slug}`}
-                    className="hover:underline underline-offset-4 decoration-slate-300"
-                  >
-                    {project.title}
-                  </Link>
-                </h3>
-
-                <p className="text-sm text-slate-600 leading-relaxed font-normal">
-                  {project.summary}
-                </p>
-
-                {/* Action Links */}
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <Link
-                    to={`/projects/${project.slug}`}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#0f172a] text-white text-xs font-semibold hover:bg-[#1e293b] transition-all shadow-xs"
-                  >
-                    <span>Read Architecture Spec</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-
-                  {project.live_url && (
-                    <a
-                      href={project.live_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-slate-200 bg-white text-slate-700 text-xs font-medium hover:bg-slate-50 transition-colors"
-                    >
-                      <ExternalLink className="h-3.5 w-3.5 text-slate-500" />
-                      <span>Live Site</span>
-                    </a>
-                  )}
-
-                  {project.github_url && (
-                    <a
-                      href={project.github_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-slate-200 bg-white text-slate-700 text-xs font-medium hover:bg-slate-50 transition-colors"
-                    >
-                      <FaGithub className="h-3.5 w-3.5" />
-                      <span>Source</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          </TactileCard>
-        ))}
-      </div>
+      {/* Projects Display: List Index or Visual Grid */}
+      {viewMode === 'list' ? (
+        <ProjectListIndex projects={displayList} />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {displayList.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

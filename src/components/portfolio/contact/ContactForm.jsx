@@ -101,10 +101,10 @@ export function ContactForm({ className }) {
 
       {/* Success Banner */}
       {isSuccessSubmitted && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-3 animate-in fade-in duration-200">
-          <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
-          <span>
-            Thank you! Your inquiry was transmitted directly to my inbox. I will review it and reply within 24 hours.
+        <div className="p-4 rounded-xl bg-[#DCFCE7] border border-[#86EFAC] text-[#15803D] text-sm flex items-center gap-3 animate-in fade-in duration-200">
+          <CheckCircle2 className="h-5 w-5 text-[#16A34A] shrink-0" />
+          <span className="font-sans">
+            Inquiry transmitted. A detailed response will be delivered within 24 business hours.
           </span>
         </div>
       )}
@@ -113,8 +113,8 @@ export function ContactForm({ className }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Name Input */}
         <div className="space-y-1.5">
-          <label htmlFor="contact-name" className="text-xs font-medium text-slate-700">
-            Full Name <span className="text-rose-500">*</span>
+          <label htmlFor="contact-name" className="font-mono text-xs text-[#78716C]">
+            FULL NAME <span className="text-[#C2410C]">*</span>
           </label>
           <input
             id="contact-name"
@@ -125,11 +125,11 @@ export function ContactForm({ className }) {
             onChange={handleChange}
             placeholder="Jane Doe"
             className={cn(
-              'w-full h-12 px-4 rounded-xl border bg-[#f8fafc] text-sm text-slate-900',
-              'placeholder:text-slate-400 focus:bg-white focus:outline-hidden transition-all',
+              'w-full h-12 px-4 rounded-xl border bg-[#FAF8F5] text-sm text-[#141416] font-sans',
+              'placeholder:text-[#A8A29E] focus:bg-white focus:outline-hidden transition-all',
               errors.name
                 ? 'border-rose-400 focus:border-rose-500 ring-1 ring-rose-200'
-                : 'border-slate-200 focus:border-[#0f172a]'
+                : 'border-[#E7E2DA] focus:border-[#141416]'
             )}
           />
           {errors.name && (
@@ -142,8 +142,8 @@ export function ContactForm({ className }) {
 
         {/* Email Input */}
         <div className="space-y-1.5">
-          <label htmlFor="contact-email" className="text-xs font-medium text-slate-700">
-            Email Address <span className="text-rose-500">*</span>
+          <label htmlFor="contact-email" className="font-mono text-xs text-[#78716C]">
+            EMAIL ADDRESS <span className="text-[#C2410C]">*</span>
           </label>
           <input
             id="contact-email"
@@ -152,13 +152,13 @@ export function ContactForm({ className }) {
             disabled={contactMutation.isPending}
             value={formData.email}
             onChange={handleChange}
-            placeholder="jane@techcorp.com"
+            placeholder="jane@organization.com"
             className={cn(
-              'w-full h-12 px-4 rounded-xl border bg-[#f8fafc] text-sm text-slate-900',
-              'placeholder:text-slate-400 focus:bg-white focus:outline-hidden transition-all',
+              'w-full h-12 px-4 rounded-xl border bg-[#FAF8F5] text-sm text-[#141416] font-sans',
+              'placeholder:text-[#A8A29E] focus:bg-white focus:outline-hidden transition-all',
               errors.email
                 ? 'border-rose-400 focus:border-rose-500 ring-1 ring-rose-200'
-                : 'border-slate-200 focus:border-[#0f172a]'
+                : 'border-[#E7E2DA] focus:border-[#141416]'
             )}
           />
           {errors.email && (
@@ -172,8 +172,8 @@ export function ContactForm({ className }) {
 
       {/* Subject Input */}
       <div className="space-y-1.5">
-        <label htmlFor="contact-subject" className="text-xs font-medium text-slate-700">
-          Subject <span className="text-rose-500">*</span>
+        <label htmlFor="contact-subject" className="font-mono text-xs text-[#78716C]">
+          ENGAGEMENT SUBJECT <span className="text-[#C2410C]">*</span>
         </label>
         <input
           id="contact-subject"
@@ -182,13 +182,13 @@ export function ContactForm({ className }) {
           disabled={contactMutation.isPending}
           value={formData.subject}
           onChange={handleChange}
-          placeholder="Principal Contract Opportunity / Systems Review"
+          placeholder="Principal Contract / Systems Review"
           className={cn(
-            'w-full h-12 px-4 rounded-xl border bg-[#f8fafc] text-sm text-slate-900',
-            'placeholder:text-slate-400 focus:bg-white focus:outline-hidden transition-all',
+            'w-full h-12 px-4 rounded-xl border bg-[#FAF8F5] text-sm text-[#141416] font-sans',
+            'placeholder:text-[#A8A29E] focus:bg-white focus:outline-hidden transition-all',
             errors.subject
               ? 'border-rose-400 focus:border-rose-500 ring-1 ring-rose-200'
-              : 'border-slate-200 focus:border-[#0f172a]'
+              : 'border-[#E7E2DA] focus:border-[#141416]'
           )}
         />
         {errors.subject && (
@@ -202,10 +202,10 @@ export function ContactForm({ className }) {
       {/* Message Textarea */}
       <div className="space-y-1.5">
         <div className="flex justify-between items-center">
-          <label htmlFor="contact-message" className="text-xs font-medium text-slate-700">
-            Project Overview & Goals <span className="text-rose-500">*</span>
+          <label htmlFor="contact-message" className="font-mono text-xs text-[#78716C]">
+            TECHNICAL SCOPE & OBJECTIVES <span className="text-[#C2410C]">*</span>
           </label>
-          <span className="text-[11px] text-slate-400 font-code">
+          <span className="text-[11px] text-[#A8A29E] font-mono">
             {formData.message.length} chars
           </span>
         </div>
@@ -216,13 +216,13 @@ export function ContactForm({ className }) {
           disabled={contactMutation.isPending}
           value={formData.message}
           onChange={handleChange}
-          placeholder="Briefly describe the platform scale, technical stack, timeline, or engineering objectives..."
+          placeholder="Briefly describe platform traffic, concurrency bottlenecks, tech stack, or engineering goals..."
           className={cn(
-            'w-full p-4 rounded-xl border bg-[#f8fafc] text-sm text-slate-900',
-            'placeholder:text-slate-400 focus:bg-white focus:outline-hidden transition-all resize-y',
+            'w-full p-4 rounded-xl border bg-[#FAF8F5] text-sm text-[#141416] font-sans',
+            'placeholder:text-[#A8A29E] focus:bg-white focus:outline-hidden transition-all resize-y',
             errors.message
               ? 'border-rose-400 focus:border-rose-500 ring-1 ring-rose-200'
-              : 'border-slate-200 focus:border-[#0f172a]'
+              : 'border-[#E7E2DA] focus:border-[#141416]'
           )}
         />
         {errors.message && (
@@ -233,16 +233,16 @@ export function ContactForm({ className }) {
         )}
       </div>
 
-      {/* Submit Button with Animated Spinner */}
+      {/* Submit Button with Tactile Ink Press */}
       <div className="pt-2">
         <button
           type="submit"
           disabled={contactMutation.isPending}
           className={cn(
-            'w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 h-12 rounded-xl',
-            'bg-[#0f172a] text-white text-sm font-semibold tracking-tight shadow-tactile-card',
-            'hover:bg-[#1e293b] active:scale-98 transition-all',
-            'disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer'
+            'btn-press w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 h-12 rounded-xl',
+            'bg-[#141416] text-[#FAF8F5] text-sm font-semibold tracking-tight shadow-xs',
+            'hover:bg-[#2A2928] cursor-pointer',
+            'disabled:opacity-60 disabled:cursor-not-allowed'
           )}
         >
           {contactMutation.isPending ? (
@@ -252,7 +252,7 @@ export function ContactForm({ className }) {
             </>
           ) : (
             <>
-              <span>Send Message</span>
+              <span>Transmit Message</span>
               <Send className="h-4 w-4" />
             </>
           )}

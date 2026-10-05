@@ -3,55 +3,61 @@ import { Terminal } from 'lucide-react';
 import { cn } from '../../../lib/utils';
 
 export function TerminalCard({
-  title = 'bash ~ npx alexmercer --system-status',
+  title = 'inspector ~ runtime-telemetry',
   lines = [
-    { type: 'command', text: 'npx system-check' },
-    { type: 'output', text: '✔ Core Engine: Node.js 22 LTS / PostgreSQL 16 Active' },
-    { type: 'output', text: '✔ Architecture: High-concurrency event-driven microservices' },
-    { type: 'output', text: '✔ Availability: Ready for contracts & principal roles' },
+    { type: 'command', text: 'whoami' },
+    { type: 'output', text: 'Alex Mercer — Principal Systems Architect' },
+    { type: 'command', text: 'cat /etc/core-telemetry.conf' },
+    { type: 'output', text: 'ENGINE: Node.js 22 LTS + Go 1.22' },
+    { type: 'output', text: 'STORAGE: PostgreSQL 16 (P99 < 35ms) + Redis 7' },
+    { type: 'output', text: 'EVENT_BUS: Apache Kafka (0 state drift)' },
+    { type: 'command', text: 'echo $STATUS' },
+    { type: 'output', text: 'READY: Open for select technical advisory & contracts' },
   ],
   className,
 }) {
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-2xl border border-slate-800 bg-[#0f172a] shadow-tactile-card',
+        'overflow-hidden rounded-2xl md:rounded-3xl border border-[#E7E2DA] bg-white shadow-[0_4px_24px_-4px_rgba(20,20,22,0.06)]',
         className
       )}
     >
-      {/* Terminal Title Bar */}
-      <div className="flex items-center justify-between border-b border-slate-800/80 bg-slate-900/90 px-4 py-3">
-        <div className="flex items-center gap-2">
-          {/* macOS 10px dots */}
-          <span className="h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#f59e0b]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#10b981]" />
+      {/* Title Bar */}
+      <div className="flex items-center justify-between border-b border-[#E7E2DA] bg-[#F4EFEA] px-4 py-3">
+        <div className="flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#E7E2DA] border border-[#D6CFC4]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#E7E2DA] border border-[#D6CFC4]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#E7E2DA] border border-[#D6CFC4]" />
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-slate-400 font-code">
-          <Terminal className="h-3 w-3 text-slate-400" />
+        <div className="flex items-center gap-1.5 text-xs text-[#78716C] font-mono">
+          <Terminal className="h-3 w-3 text-[#78716C]" />
           <span>{title}</span>
         </div>
-        <div className="w-10" />
+        <div className="flex items-center gap-1 text-[11px] font-mono text-[#16A34A]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A] animate-pulse" />
+          <span className="hidden sm:inline">LIVE</span>
+        </div>
       </div>
 
       {/* Terminal Body */}
-      <div className="p-5 font-code text-xs md:text-[13px] leading-relaxed space-y-2 text-slate-200">
+      <div className="p-5 font-mono text-xs md:text-[13px] leading-relaxed space-y-2 bg-[#FAF8F5] text-[#141416]">
         {lines.map((line, idx) => (
           <div key={idx} className="flex items-start gap-2">
             {line.type === 'command' ? (
               <>
-                <span className="text-emerald-400 select-none font-bold">$</span>
-                <span className="text-slate-100 font-medium">{line.text}</span>
+                <span className="text-[#C2410C] select-none font-bold">$</span>
+                <span className="text-[#141416] font-medium">{line.text}</span>
               </>
             ) : (
-              <span className="text-slate-400 pl-4">{line.text}</span>
+              <span className="text-[#44403C] pl-4">{line.text}</span>
             )}
           </div>
         ))}
         {/* Blinking Prompt Cursor */}
         <div className="flex items-center gap-2 pt-1">
-          <span className="text-emerald-400 select-none font-bold">$</span>
-          <span className="inline-block h-4 w-2 bg-emerald-400 animate-pulse" />
+          <span className="text-[#C2410C] select-none font-bold">$</span>
+          <span className="inline-block h-4 w-2 bg-[#C2410C] animate-pulse" />
         </div>
       </div>
     </div>

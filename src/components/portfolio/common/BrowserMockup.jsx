@@ -13,22 +13,22 @@ export function BrowserMockup({
   return (
     <div
       className={cn(
-        'group overflow-hidden rounded-2xl md:rounded-3xl border border-slate-200 bg-white shadow-tactile-card',
+        'group overflow-hidden rounded-2xl md:rounded-3xl border border-[#E7E2DA] bg-white shadow-[0_4px_20px_-4px_rgba(20,20,22,0.05)] transition-all duration-300 hover:border-[#D6CFC4]',
         className
       )}
     >
       {/* Top Browser Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 bg-[#f8fafc] px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-[#E7E2DA] bg-[#FAF8F5] px-4 py-2.5">
         <div className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#cbd5e1]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#cbd5e1]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#cbd5e1]" />
+          <span className="h-2 w-2 rounded-full bg-[#E7E2DA]" />
+          <span className="h-2 w-2 rounded-full bg-[#E7E2DA]" />
+          <span className="h-2 w-2 rounded-full bg-[#E7E2DA]" />
         </div>
 
         {/* URL Bar Pill */}
-        <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] text-slate-500 shadow-xs max-w-xs md:max-w-sm truncate">
-          <Lock className="h-2.5 w-2.5 text-slate-400 shrink-0" />
-          <span className="truncate font-sans font-medium">{url}</span>
+        <div className="flex items-center gap-1.5 rounded-full border border-[#E7E2DA] bg-white px-3 py-0.5 text-[11px] text-[#78716C] shadow-2xs max-w-xs md:max-w-sm truncate font-mono">
+          <Lock className="h-2.5 w-2.5 text-[#A8A29E] shrink-0" />
+          <span className="truncate">{url}</span>
         </div>
 
         <div className="w-8" />

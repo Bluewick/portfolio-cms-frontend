@@ -27,38 +27,37 @@ export function BlogArchivePage() {
   return (
     <div className="pt-28 md:pt-36 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-10">
       {/* Breadcrumb */}
-      <Breadcrumb items={[{ label: 'Articles & Insights' }]} />
+      <Breadcrumb items={[{ label: 'Technical Essays' }]} />
 
       {/* Header */}
       <div className="space-y-4 max-w-2xl">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700">
-          <BookOpen className="h-3.5 w-3.5" />
-          <span>Engineering Journal</span>
+        <div className="font-mono text-xs font-semibold tracking-wider text-[#78716C] uppercase">
+          // ARCHIVE ARTICLES & TECHNICAL MONOGRAPHS
         </div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight">
-          Technical Writing & Case Studies
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight text-[#141416] leading-[1.1]">
+          Technical Essays & <em className="italic font-serif text-[#C2410C]">Monographs</em>
         </h1>
-        <p className="text-base text-slate-600 leading-relaxed font-normal">
-          In-depth architectural breakdowns, database transaction recipes, and systems design principles learned in production.
+        <p className="text-base text-[#44403C] leading-relaxed font-normal font-sans">
+          In-depth architectural breakdowns, database transaction recipes, distributed concurrency patterns, and lessons learned running production backends.
         </p>
       </div>
 
       {/* Search Bar */}
-      <div className="p-4 md:p-5 rounded-2xl bg-white border border-slate-200 shadow-tactile-card">
+      <div className="p-4 md:p-5 rounded-2xl md:rounded-3xl bg-white border border-[#E7E2DA] shadow-[0_1px_3px_rgba(20,20,22,0.03)]">
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A8A29E]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search articles by title, topic, or technology..."
-            className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200 bg-[#f8fafc] text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#0f172a] focus:outline-hidden transition-colors"
+            className="w-full h-11 pl-10 pr-10 rounded-xl border border-[#E7E2DA] bg-[#FAF8F5] text-sm text-[#141416] placeholder:text-[#A8A29E] focus:bg-white focus:border-[#141416] focus:outline-hidden transition-colors font-sans"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#A8A29E] hover:text-[#141416] p-1 cursor-pointer"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -79,20 +78,20 @@ export function BlogArchivePage() {
         </div>
       ) : (
         /* Empty State */
-        <div className="text-center py-16 px-4 rounded-3xl border border-slate-200 bg-white shadow-tactile-card space-y-4">
-          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
+        <div className="text-center py-16 px-4 rounded-3xl border border-[#E7E2DA] bg-white shadow-[0_1px_3px_rgba(20,20,22,0.03)] space-y-4">
+          <div className="h-12 w-12 rounded-full bg-[#F4EFEA] flex items-center justify-center mx-auto text-[#78716C]">
             <Search className="h-5 w-5" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-lg font-bold text-[#0f172a]">No articles found</h3>
-            <p className="text-sm text-slate-500 max-w-sm mx-auto">
-              We couldn't find any articles matching "{searchQuery}".
+            <h3 className="font-serif text-xl font-normal text-[#141416]">No essays located</h3>
+            <p className="text-sm text-[#78716C] max-w-sm mx-auto font-sans">
+              No entries matched "{searchQuery}". Try a different keyword or reset search.
             </p>
           </div>
           <button
             type="button"
             onClick={() => setSearchQuery('')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0f172a] text-white text-xs font-semibold hover:bg-[#1e293b] transition-all cursor-pointer"
+            className="btn-press inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#141416] text-[#FAF8F5] text-xs font-semibold hover:bg-[#2A2928] cursor-pointer"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             <span>Clear Search</span>
@@ -102,9 +101,9 @@ export function BlogArchivePage() {
 
       {/* Pagination Controls */}
       {meta.total_pages > 1 && (
-        <div className="pt-8 flex items-center justify-between border-t border-slate-200">
-          <span className="text-xs text-slate-500 font-medium">
-            Page {meta.page} of {meta.total_pages} ({meta.total} articles)
+        <div className="pt-8 flex items-center justify-between border-t border-[#E7E2DA]">
+          <span className="font-mono text-xs text-[#78716C]">
+            Page {meta.page} of {meta.total_pages} ({meta.total} essays)
           </span>
 
           <div className="flex items-center gap-2">
@@ -112,7 +111,7 @@ export function BlogArchivePage() {
               type="button"
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
+              className="btn-press inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full border border-[#E7E2DA] bg-white text-xs font-medium text-[#44403C] hover:border-[#D6CFC4] hover:text-[#141416] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs font-mono"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
               <span>Previous</span>
@@ -122,7 +121,7 @@ export function BlogArchivePage() {
               type="button"
               disabled={page >= meta.total_pages}
               onClick={() => setPage((p) => p + 1)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
+              className="btn-press inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full border border-[#E7E2DA] bg-white text-xs font-medium text-[#44403C] hover:border-[#D6CFC4] hover:text-[#141416] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs font-mono"
             >
               <span>Next</span>
               <ChevronRight className="h-3.5 w-3.5" />

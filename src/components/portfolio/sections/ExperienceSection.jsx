@@ -23,74 +23,83 @@ export function ExperienceSection() {
 
   return (
     <section id="experience" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-      <div className="space-y-3 mb-12 text-center max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700">
-          <Briefcase className="h-3.5 w-3.5" />
-          <span>Work History</span>
+      <div className="space-y-3 mb-16 text-center max-w-2xl mx-auto">
+        <div className="font-mono text-xs font-semibold tracking-wider text-[#78716C] uppercase">
+          // 02. CAREER TIMELINE & FIELD NOTES
         </div>
-        <h2 className="text-3xl font-bold tracking-tight text-[#0f172a]">
-          Career & Technical Leadership
+        <h2 className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] font-normal tracking-tight text-[#141416]">
+          Technical leadership & <em className="italic font-serif text-[#C2410C]">production tenure</em>.
         </h2>
-        <p className="text-sm md:text-base text-slate-600">
-          Roles where I took ownership of system architecture, database performance, and team engineering standards.
+        <p className="text-sm md:text-base text-[#44403C] font-sans">
+          Engineering roles where I took operational ownership of distributed backend systems, query optimization, and team architectural standards.
         </p>
       </div>
 
-      <div className="space-y-4">
-        {sortedExperiences.map((exp) => {
-          const startDate = formatDate(exp.start_date);
-          const endDate = exp.is_current ? 'Present' : formatDate(exp.end_date);
+      {/* Editorial Timeline with Hairline Connecting Rule and Circular Notches */}
+      <div className="relative max-w-4xl mx-auto">
+        {/* Soft vertical connecting rule */}
+        <div className="absolute left-4 md:left-[170px] top-4 bottom-4 w-px bg-[#E7E2DA]" />
 
-          return (
-            <TactileCard
-              key={exp.id}
-              className="p-6 md:p-8 hover:bg-slate-50/50 transition-colors"
-            >
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                {/* Role & Company */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="text-lg md:text-xl font-bold text-[#0f172a]">
-                      {exp.role}
-                    </h3>
-                    {exp.is_current && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        Current
-                      </span>
-                    )}
-                  </div>
+        <div className="space-y-12">
+          {sortedExperiences.map((exp) => {
+            const startDate = formatDate(exp.start_date);
+            const endDate = exp.is_current ? 'Present' : formatDate(exp.end_date);
 
-                  <div className="flex items-center gap-4 text-xs md:text-sm text-slate-600 font-medium">
-                    <span className="flex items-center gap-1 text-slate-900 font-semibold">
-                      <Building2 className="h-3.5 w-3.5 text-slate-400" />
-                      {exp.company}
-                    </span>
-                    {exp.location && (
-                      <span className="flex items-center gap-1 text-slate-500">
-                        <MapPin className="h-3.5 w-3.5 text-slate-400" />
-                        {exp.location}
-                      </span>
-                    )}
-                  </div>
+            return (
+              <div
+                key={exp.id}
+                className="relative pl-12 md:pl-0 md:grid md:grid-cols-[170px_1fr] md:gap-12 items-start group"
+              >
+                {/* Circular Notch Node */}
+                <div className="absolute left-4 md:left-[170px] top-1.5 -translate-x-1/2 h-3.5 w-3.5 rounded-full bg-[#FAF8F5] border-2 border-[#141416] group-hover:border-[#C2410C] group-hover:scale-110 transition-all z-10">
+                  {exp.is_current && (
+                    <span className="absolute inset-0.5 rounded-full bg-[#16A34A] animate-pulse" />
+                  )}
                 </div>
 
-                {/* Date Badge Pill */}
-                <div className="shrink-0">
-                  <span className="inline-block px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-code font-medium text-slate-700">
+                {/* Left Column: Date Range in meta-mono */}
+                <div className="md:text-right pr-6 space-y-1">
+                  <div className="font-mono text-xs font-semibold text-[#141416]">
                     {startDate} — {endDate}
-                  </span>
+                  </div>
+                  {exp.is_current && (
+                    <span className="inline-block font-mono text-[10px] uppercase tracking-wider text-[#16A34A] bg-[#DCFCE7] px-2 py-0.5 rounded-full border border-[#86EFAC]">
+                      Active
+                    </span>
+                  )}
+                </div>
+
+                {/* Right Column: Role, Company, Location & Achievements */}
+                <div className="mt-2 md:mt-0 p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white border border-[#E7E2DA] shadow-[0_1px_3px_rgba(20,20,22,0.03)] hover:border-[#D6CFC4] transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-3 border-b border-[#E7E2DA]">
+                    <div>
+                      <h3 className="font-serif text-xl md:text-2xl font-normal text-[#141416]">
+                        {exp.role}
+                      </h3>
+                      <div className="flex items-center gap-2 text-xs md:text-sm text-[#44403C] font-medium pt-1 font-sans">
+                        <span className="font-semibold text-[#141416] flex items-center gap-1.5">
+                          <Building2 className="h-3.5 w-3.5 text-[#78716C]" />
+                          {exp.company}
+                        </span>
+                        {exp.location && (
+                          <span className="text-[#78716C] flex items-center gap-1">
+                            • {exp.location}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {exp.description && (
+                    <p className="mt-4 text-sm text-[#44403C] leading-relaxed font-normal font-sans">
+                      {exp.description}
+                    </p>
+                  )}
                 </div>
               </div>
-
-              {/* Achievements Description */}
-              {exp.description && (
-                <div className="mt-4 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed font-normal">
-                  <p>{exp.description}</p>
-                </div>
-              )}
-            </TactileCard>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );

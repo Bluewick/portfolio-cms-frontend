@@ -21,34 +21,33 @@ export function SkillsSection() {
   }, {});
 
   return (
-    <section id="skills" className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <section id="skills" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
       {/* Section Header */}
-      <div className="space-y-3 mb-10 text-center max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700">
-          <Cpu className="h-3.5 w-3.5" />
-          <span>Technical Capabilities</span>
+      <div className="space-y-3 mb-12 text-center max-w-2xl mx-auto">
+        <div className="font-mono text-xs font-semibold tracking-wider text-[#78716C] uppercase">
+          // 04. TECHNICAL CAPABILITIES & TAXONOMY
         </div>
-        <h2 className="text-3xl font-bold tracking-tight text-[#0f172a]">
-          Engineered for production scale.
+        <h2 className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] font-normal tracking-tight text-[#141416]">
+          Specialized stack for <em className="italic font-serif text-[#C2410C]">production scale</em>.
         </h2>
-        <p className="text-sm md:text-base text-slate-600">
-          A focused taxonomy of technologies I deploy to build resilient cloud applications.
+        <p className="text-sm md:text-base text-[#44403C] font-sans">
+          A rigorous taxonomy of technologies deployed across high-throughput distributed architectures, transaction storage, and cloud infrastructure.
         </p>
       </div>
 
       {/* Categorized Matrix */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {Object.entries(groupedSkills).map(([category, items]) => (
-          <TactileCard key={category} className="p-6 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="font-semibold text-sm text-[#0f172a] uppercase tracking-wider font-sans">
-                {category}
+          <TactileCard key={category} className="p-6 space-y-4 bg-white border-[#E7E2DA]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E7E2DA]">
+              <h3 className="font-mono text-xs font-semibold text-[#141416] uppercase tracking-wider">
+                // {category}
               </h3>
-              <span className="text-xs font-code text-slate-400 font-medium">
-                {items.length} {items.length === 1 ? 'skill' : 'skills'}
+              <span className="text-[11px] font-mono text-[#78716C] bg-[#F4EFEA] px-2 py-0.5 rounded-full border border-[#E7E2DA]">
+                {items.length} {items.length === 1 ? 'spec' : 'specs'}
               </span>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 pt-1">
               {items
                 .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
                 .map((skill) => (

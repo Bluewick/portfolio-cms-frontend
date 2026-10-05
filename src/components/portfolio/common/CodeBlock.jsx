@@ -36,15 +36,15 @@ export function CodeBlock({
   return (
     <div
       className={cn(
-        'group relative my-6 overflow-hidden rounded-xl border border-slate-800 bg-[#0f172a] shadow-tactile-card',
+        'paper-code-inspector group relative my-6 overflow-hidden rounded-2xl border border-[#E7E2DA] bg-[#F4EFEA] shadow-xs',
         className
       )}
     >
       {/* Top File / Language Header Bar */}
-      <div className="flex items-center justify-between border-b border-slate-800/80 bg-slate-900/90 px-4 py-2.5">
-        <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
-          <FileCode className="h-3.5 w-3.5 text-slate-400" />
-          <span className="font-code tracking-tight text-slate-300">
+      <div className="flex items-center justify-between border-b border-[#E7E2DA] bg-[#FAF8F5] px-4 py-2.5">
+        <div className="flex items-center gap-2 text-xs font-medium text-[#78716C]">
+          <FileCode className="h-3.5 w-3.5 text-[#78716C]" />
+          <span className="font-mono tracking-tight text-[#141416]">
             {filename || `${language}.ts`}
           </span>
         </div>
@@ -55,19 +55,19 @@ export function CodeBlock({
           onClick={handleCopy}
           aria-label="Copy code snippet"
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
-            'border border-slate-700/60 bg-slate-800/60 text-slate-300',
-            'hover:bg-slate-700 hover:text-white focus:outline-hidden focus:ring-1 focus:ring-slate-400'
+            'btn-press inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-mono font-medium transition-colors',
+            'border border-[#E7E2DA] bg-white text-[#44403C]',
+            'hover:bg-[#FAF8F5] hover:text-[#141416] cursor-pointer'
           )}
         >
           {copied ? (
             <>
-              <Check className="h-3.5 w-3.5 text-emerald-400" />
-              <span className="text-emerald-400">Copied</span>
+              <Check className="h-3.5 w-3.5 text-[#16A34A]" />
+              <span className="text-[#16A34A]">Copied</span>
             </>
           ) : (
             <>
-              <Copy className="h-3.5 w-3.5" />
+              <Copy className="h-3.5 w-3.5 text-[#78716C]" />
               <span>Copy</span>
             </>
           )}
@@ -75,7 +75,7 @@ export function CodeBlock({
       </div>
 
       {/* Code Container with horizontal scrolling */}
-      <div className="overflow-x-auto p-4 md:p-5 font-code text-[13px] leading-relaxed">
+      <div className="overflow-x-auto p-4 md:p-5 font-mono text-[13px] leading-relaxed bg-[#F4EFEA]">
         <pre className="!bg-transparent !p-0 !m-0 !border-none">
           <code
             className={`language-${language}`}

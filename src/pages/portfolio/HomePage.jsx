@@ -8,12 +8,9 @@ import { ServicesSection } from '../../components/portfolio/sections/ServicesSec
 import { TestimonialsSection } from '../../components/portfolio/sections/TestimonialsSection';
 import { LatestBlogsSection } from '../../components/portfolio/sections/LatestBlogsSection';
 import { ContactSection } from '../../components/portfolio/sections/ContactSection';
-import { PortfolioNavbar } from '../../components/portfolio/PortfolioNavbar';
-
 export function HomePage() {
   return (
     <div className="w-full space-y-4 md:space-y-8">
-        {/* <PortfolioNavbar /> */}
       {/* 1. Hero Pitch & Terminal specs */}
       <HeroSection />
 

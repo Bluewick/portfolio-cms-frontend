@@ -16,25 +16,24 @@ export function ServicesSection() {
   );
 
   return (
-    <section id="services" className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <section id="services" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
       <div className="space-y-3 mb-12 text-center max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700">
-          <Layers className="h-3.5 w-3.5" />
-          <span>Consulting & Offerings</span>
+        <div className="font-mono text-xs font-semibold tracking-wider text-[#78716C] uppercase">
+          // 03. CONSULTING SCOPE & ADVISORY
         </div>
-        <h2 className="text-3xl font-bold tracking-tight text-[#0f172a]">
-          Specialized Engineering Services
+        <h2 className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] font-normal tracking-tight text-[#141416]">
+          Specialized <em className="italic font-serif text-[#C2410C]">engineering</em> engagements.
         </h2>
-        <p className="text-sm md:text-base text-slate-600">
-          Targeted technical engagements designed to unblock scale and harden critical software infrastructure.
+        <p className="text-sm md:text-base text-[#44403C] font-sans">
+          Targeted production scopes designed to unblock scalability bottlenecks, audit database integrity, and architect fault-tolerant distributed backends.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {sortedServices.map((service) => (
-          <TactileCard key={service.id} className="p-6 md:p-8 space-y-4">
-            {/* Icon Box Header */}
-            <div className="h-10 w-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700">
+          <TactileCard key={service.id} className="p-7 md:p-8 space-y-5 bg-white border-[#E7E2DA]">
+            {/* Icon Box Header with Warm Circular Container */}
+            <div className="h-12 w-12 rounded-full bg-[#F4EFEA] border border-[#E7E2DA] flex items-center justify-center text-[#C2410C]">
               {service.icon_url ? (
                 <img
                   src={service.icon_url}
@@ -46,15 +45,15 @@ export function ServicesSection() {
                   }}
                 />
               ) : (
-                <Server className="h-5 w-5 text-slate-700" />
+                <Server className="h-5 w-5 text-[#C2410C] stroke-[2]" />
               )}
             </div>
 
-            <h3 className="text-lg font-bold text-[#0f172a]">
+            <h3 className="font-serif text-xl font-normal text-[#141416] tracking-tight">
               {service.title}
             </h3>
 
-            <p className="text-sm text-slate-600 leading-relaxed font-normal">
+            <p className="text-sm text-[#44403C] leading-relaxed font-normal font-sans">
               {service.description}
             </p>
           </TactileCard>

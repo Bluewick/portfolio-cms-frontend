@@ -14,8 +14,26 @@ export function PortfolioNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
 
-  // Monitor scroll depth for subtle shadow elevation
+  // Live real-time world clock
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(
+        now.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+        })
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Monitor scroll depth
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -24,7 +42,7 @@ export function PortfolioNavbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Monitor intersection on home page sections for micro-dot indicator
+  // Monitor intersection on home page sections
   useEffect(() => {
     if (location.pathname !== '/') {
       setActiveSection('');
@@ -51,16 +69,14 @@ export function PortfolioNavbar() {
     return () => observer.disconnect();
   }, [location.pathname]);
 
-  // Dynamically assemble navigation items based on Ghost Section rules
   const navItems = [
-    { label: 'About', target: 'about', route: '/' },
-    ...(hasProjects ? [{ label: 'Projects', target: 'projects', route: '/projects' }] : []),
-    ...(hasExperiences ? [{ label: 'Experience', target: 'experience', route: '/' }] : []),
-    ...(hasServices ? [{ label: 'Services', target: 'services', route: '/' }] : []),
-    ...(hasBlogs ? [{ label: 'Writing', target: 'writing', route: '/blogs' }] : []),
+    { label: 'Overview', target: 'about', route: '/' },
+    ...(hasProjects ? [{ label: 'Selected Works', target: 'projects', route: '/projects' }] : []),
+    ...(hasExperiences ? [{ label: 'Timeline', target: 'experience', route: '/' }] : []),
+    ...(hasServices ? [{ label: 'Consulting', target: 'services', route: '/' }] : []),
+    ...(hasBlogs ? [{ label: 'Essays', target: 'writing', route: '/blogs' }] : []),
   ];
 
-  // Smart navigation: scroll to ID if on Home, else navigate to route with hash
   const handleNavClick = (e, item) => {
     e.preventDefault();
     setMobileMenuOpen(false);
@@ -91,28 +107,41 @@ export function PortfolioNavbar() {
 
   return (
     <>
-      <header className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+      <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <div
           className={cn(
             'pointer-events-auto flex items-center justify-between gap-4 md:gap-8',
-            'h-12 md:h-13 px-3.5 md:px-5 rounded-full',
-            'bg-white/95 backdrop-blur-md border border-slate-200',
-            'shadow-pill-floating transition-all duration-200',
-            isScrolled ? 'border-slate-300 shadow-tactile-hover' : ''
+            'h-13 px-4 md:px-5 rounded-full',
+            'bg-[#FAF8F5]/90 backdrop-blur-md border border-[#E7E2DA]',
+            'shadow-[0_4px_20px_-4px_rgba(20,20,22,0.06)] transition-all duration-300',
+            isScrolled ? 'border-[#D6CFC4] shadow-[0_8px_24px_-6px_rgba(20,20,22,0.1)] bg-[#FAF8F5]/95' : ''
           )}
         >
-          {/* Brand Monogram */}
+          {/* Brand Monogram & Live Status Dot */}
           <Link
             to="/"
-            className="flex items-center gap-2 group focus:outline-hidden"
-            aria-label="Alex Mercer Portfolio Home"
+            className="flex items-center gap-2.5 group focus:outline-hidden"
+            aria-label="Portfolio Home"
           >
-            <div className="h-8 w-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center font-bold text-xs tracking-wider transition-transform duration-200 group-hover:scale-105">
-              {about?.name ? about.name.split(' ').map((n) => n[0]).join('') : 'AM'}
+            <div className="relative">
+              <div className="h-8 w-8 rounded-full bg-[#141416] text-[#FAF8F5] flex items-center justify-center font-serif text-sm font-semibold tracking-wider transition-transform duration-200 group-hover:scale-105 border border-[#141416]">
+                {about?.name ? about.name.split(' ').map((n) => n[0]).join('') : 'AM'}
+              </div>
+              <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#16A34A] border-2 border-[#FAF8F5]" />
+              </span>
             </div>
-            <span className="font-semibold text-xs tracking-tight text-slate-900 hidden sm:inline-block">
-              {about?.name || 'Alex Mercer'}
-            </span>
+            <div className="hidden sm:flex flex-col">
+              <span className="font-serif font-semibold text-sm tracking-tight text-[#141416]">
+                {about?.name || 'Alex Mercer'}
+              </span>
+              {currentTime && (
+                <span className="text-[10px] font-mono text-[#78716C] leading-none">
+                  {currentTime}
+                </span>
+              )}
+            </div>
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -125,14 +154,16 @@ export function PortfolioNavbar() {
                   href={item.route === '/' ? `/#${item.target}` : item.route}
                   onClick={(e) => handleNavClick(e, item)}
                   className={cn(
-                    'relative py-1 text-[13px] font-medium transition-colors',
-                    active ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900'
+                    'relative py-1 text-[13px] font-medium transition-colors font-sans',
+                    active
+                      ? 'text-[#C2410C] font-semibold'
+                      : 'text-[#44403C] hover:text-[#141416]'
                   )}
                 >
                   {item.label}
-                  {/* Micro-dot Active Indicator (4px circular dot #0F172A) */}
+                  {/* Micro-dot Active Indicator (Terracotta #C2410C) */}
                   {active && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-[#0f172a]" />
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-[#C2410C]" />
                   )}
                 </a>
               );
@@ -146,8 +177,8 @@ export function PortfolioNavbar() {
               onClick={(e) => handleNavClick(e, { target: 'contact', route: '/' })}
               className={cn(
                 'inline-flex items-center gap-1.5 px-4 py-2 rounded-full',
-                'bg-[#0f172a] text-white text-xs font-semibold',
-                'hover:bg-[#1e293b] active:scale-95 transition-all shadow-xs'
+                'bg-[#141416] text-[#FAF8F5] text-xs font-medium font-sans',
+                'hover:bg-[#2A2928] btn-press shadow-xs cursor-pointer'
               )}
             >
               <span>Get in Touch</span>
@@ -159,7 +190,7 @@ export function PortfolioNavbar() {
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
-              className="md:hidden flex items-center justify-center h-8 w-8 rounded-full border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors"
+              className="md:hidden flex items-center justify-center h-8 w-8 rounded-full border border-[#E7E2DA] text-[#44403C] hover:bg-[#F4EFEA] transition-colors cursor-pointer"
             >
               {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
@@ -169,22 +200,22 @@ export function PortfolioNavbar() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs md:hidden animate-in fade-in duration-150">
-          <div className="fixed top-22 inset-x-4 bg-white border border-slate-200 rounded-3xl p-6 shadow-tactile-hover space-y-4">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                Navigation
+        <div className="fixed inset-0 z-40 bg-[#141416]/30 backdrop-blur-xs md:hidden animate-in fade-in duration-150">
+          <div className="fixed top-20 inset-x-4 bg-[#FAF8F5] border border-[#E7E2DA] rounded-3xl p-6 shadow-[0_16px_36px_rgba(20,20,22,0.12)] space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-[#E7E2DA]">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-[#78716C]">
+                // Navigation Index
               </span>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-1 rounded-full text-slate-400 hover:text-slate-700"
+                className="p-1 rounded-full text-[#78716C] hover:text-[#141416] cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <nav className="flex flex-col space-y-2">
+            <nav className="flex flex-col space-y-1.5">
               {navItems.map((item) => (
                 <a
                   key={item.label}
@@ -193,20 +224,20 @@ export function PortfolioNavbar() {
                   className={cn(
                     'px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-between',
                     isItemActive(item)
-                      ? 'bg-slate-100 text-slate-900 font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-[#F4EFEA] text-[#C2410C] font-semibold'
+                      : 'text-[#44403C] hover:bg-[#F4EFEA] hover:text-[#141416]'
                   )}
                 >
-                  <span>{item.label}</span>
+                  <span className="font-serif text-base">{item.label}</span>
                   {isItemActive(item) && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#0f172a]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#C2410C]" />
                   )}
                 </a>
               ))}
               <a
                 href="/#contact"
                 onClick={(e) => handleNavClick(e, { target: 'contact', route: '/' })}
-                className="mt-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-[#0f172a] text-white text-center"
+                className="mt-3 px-4 py-2.5 rounded-xl text-sm font-medium bg-[#141416] text-[#FAF8F5] text-center btn-press cursor-pointer"
               >
                 Get in Touch
               </a>

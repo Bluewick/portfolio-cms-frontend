@@ -41,9 +41,9 @@ export function SocialIconLink({
       rel="noopener noreferrer"
       aria-label={label || type}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white text-slate-700 shadow-xs transition-all duration-150',
-        'hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 hover:-translate-y-0.5',
-        showLabel ? 'px-3.5 py-1.5 text-xs font-medium' : 'h-9 w-9 shrink-0',
+        'btn-press inline-flex items-center justify-center gap-2 rounded-full border border-[#E7E2DA] bg-white text-[#44403C] shadow-2xs transition-all duration-150',
+        'hover:border-[#D6CFC4] hover:bg-[#FAF8F5] hover:text-[#141416]',
+        showLabel ? 'px-3.5 py-1.5 text-xs font-mono font-medium' : 'h-9 w-9 shrink-0',
         className
       )}
     >

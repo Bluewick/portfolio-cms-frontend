@@ -9,7 +9,7 @@ export function ContactInfoCard() {
   const [copied, setCopied] = useState(false);
 
   // Fallback public direct contact email
-  const contactEmail = 'alex.mercer@example.com';
+  const contactEmail = 'alex.mercer@technical-monograph.io';
 
   const handleCopyEmail = async () => {
     try {
@@ -28,30 +28,30 @@ export function ContactInfoCard() {
     <div className="space-y-6">
       {/* Pitch Header */}
       <div className="space-y-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Inquiries & Contracts
+        <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+          // DIRECT CORRESPONDENCE
         </span>
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-[#0f172a] leading-tight">
-          Let’s build reliable software together.
+        <h2 className="font-serif text-3xl md:text-4xl font-normal tracking-tight text-[#141416] leading-tight">
+          Initiate a <em className="italic font-serif text-[#C2410C]">technical inquiry</em>.
         </h2>
-        <p className="text-sm text-slate-600 leading-relaxed font-normal">
-          Available for senior backend engineering contracts, architectural reviews, PostgreSQL optimization, and technical advisory.
+        <p className="text-sm text-[#44403C] leading-relaxed font-normal font-sans">
+          Available for principal systems engineering contracts, database bottleneck profiling, distributed architecture reviews, and high-concurrency consulting.
         </p>
       </div>
 
       {/* Direct Metadata Stack */}
       <div className="space-y-3 pt-2">
         {/* Copyable Email Pill */}
-        <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-[#f8fafc]">
+        <div className="flex items-center justify-between p-3.5 rounded-xl border border-[#E7E2DA] bg-[#F4EFEA]">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-700">
+            <div className="h-8 w-8 rounded-lg bg-white border border-[#E7E2DA] flex items-center justify-center text-[#141416]">
               <Mail className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                Direct Contact
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#78716C]">
+                DIRECT TRANSMISSION
               </p>
-              <p className="text-xs md:text-sm font-medium text-slate-800 font-code">
+              <p className="text-xs md:text-sm font-medium text-[#141416] font-mono">
                 {contactEmail}
               </p>
             </div>
@@ -60,10 +60,10 @@ export function ContactInfoCard() {
             type="button"
             onClick={handleCopyEmail}
             aria-label="Copy email address"
-            className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white border border-transparent hover:border-slate-200 transition-all cursor-pointer"
+            className="btn-press p-2 rounded-lg text-[#78716C] hover:text-[#141416] hover:bg-white border border-transparent hover:border-[#E7E2DA] transition-all cursor-pointer"
           >
             {copied ? (
-              <Check className="h-4 w-4 text-emerald-500" />
+              <Check className="h-4 w-4 text-[#16A34A]" />
             ) : (
               <Copy className="h-4 w-4" />
             )}
@@ -71,30 +71,30 @@ export function ContactInfoCard() {
         </div>
 
         {/* Global Remote Badge */}
-        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 bg-[#f8fafc]">
-          <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-700">
+        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-[#E7E2DA] bg-[#F4EFEA]">
+          <div className="h-8 w-8 rounded-lg bg-white border border-[#E7E2DA] flex items-center justify-center text-[#141416]">
             <Globe className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Location & Remote Work
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#78716C]">
+              HEADQUARTERS & TIMEZONE
             </p>
-            <p className="text-xs md:text-sm font-medium text-slate-800">
-              San Francisco, CA (Remote Globally)
+            <p className="text-xs md:text-sm font-medium text-[#141416] font-sans">
+              San Francisco, CA • PST (Remote Globally)
             </p>
           </div>
         </div>
 
         {/* Response SLA */}
-        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 bg-[#f8fafc]">
-          <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-700">
+        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-[#E7E2DA] bg-[#F4EFEA]">
+          <div className="h-8 w-8 rounded-lg bg-white border border-[#E7E2DA] flex items-center justify-center text-[#141416]">
             <Clock className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Response Guarantee
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#78716C]">
+              GUARANTEED RESPONSE
             </p>
-            <p className="text-xs md:text-sm font-medium text-slate-800">
+            <p className="text-xs md:text-sm font-medium text-[#141416] font-sans">
               Within 24 business hours
             </p>
           </div>
@@ -103,8 +103,8 @@ export function ContactInfoCard() {
 
       {/* Social Handles */}
       <div className="pt-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-3">
-          Verified Profiles:
+        <span className="font-mono text-xs uppercase tracking-wider text-[#78716C] block mb-3">
+          // Verified Network:
         </span>
         <div className="flex items-center gap-2">
           {socialLinks.github && (
