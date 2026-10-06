@@ -7,7 +7,7 @@ import { ScrollToTop } from './ScrollToTop';
 export function PortfolioLayout() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#141416] flex flex-col selection:bg-[#FFF7ED] selection:text-[#C2410C] font-sans antialiased">
-      {/* Scroll restoration helper */}
+      {/* Scroll restoration helper */} 
       <ScrollToTop />
 
       {/* Floating Header */}
