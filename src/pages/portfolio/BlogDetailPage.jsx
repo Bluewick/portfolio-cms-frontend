@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -7,14 +7,13 @@ import {
   Clock, 
   AlertCircle 
 } from 'lucide-react';
-import { toast } from 'sonner';
 import { useBlogDetails, useBlogs, useAbout } from '../../hooks/usePortfolio';
 import { Breadcrumb } from '../../components/portfolio/common/Breadcrumb';
 import { TactileCard } from '../../components/portfolio/common/TactileCard';
 import { SkeletonLoader } from '../../components/portfolio/common/SkeletonLoader';
 import { SocialShareBar } from '../../components/portfolio/blogs/SocialShareBar';
 import { sanitizeHtml } from '../../lib/sanitize';
-import { highlightAll } from '../../lib/prism';
+import { BlogContentRenderer } from '../../components/portfolio/blogs/BlogContentRenderer';
 
 function formatDate(dateString) {
   if (!dateString) return '';
@@ -32,41 +31,6 @@ export function BlogDetailPage() {
   const { data: about } = useAbout();
 
   const allBlogs = blogData?.blogs || [];
-
-  // Syntax highlighting and copy button injection for rich-text code blocks
-  useEffect(() => {
-    if (blog?.content) {
-      highlightAll();
-
-      // Enhance all <pre> elements with dynamic copy buttons
-      const preElements = document.querySelectorAll('article pre');
-      preElements.forEach((pre) => {
-        if (pre.querySelector('.copy-code-trigger')) return;
-
-        pre.classList.add('relative', 'group');
-        const copyBtn = document.createElement('button');
-        copyBtn.className =
-          'copy-code-trigger absolute top-3 right-3 text-[11px] font-sans font-medium px-2.5 py-1 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700 opacity-0 group-hover:opacity-100 hover:bg-slate-700 hover:text-white transition-all cursor-pointer';
-        copyBtn.innerText = 'Copy';
-
-        copyBtn.onclick = async () => {
-          const codeText = pre.querySelector('code')?.innerText || pre.innerText;
-          try {
-            await navigator.clipboard.writeText(codeText);
-            toast.success('Code copied to clipboard');
-            copyBtn.innerText = 'Copied!';
-            setTimeout(() => {
-              copyBtn.innerText = 'Copy';
-            }, 2000);
-          } catch {
-            toast.error('Failed to copy code');
-          }
-        };
-
-        pre.appendChild(copyBtn);
-      });
-    }
-  }, [blog?.content]);
 
   // 404 / Draft State Fallback
   if (error || (!isLoading && !blog)) {
@@ -97,7 +61,7 @@ export function BlogDetailPage() {
     );
   }
 
-  // Loading State (Zero CLS)
+  // Loading State
   if (isLoading) {
     return (
       <div className="pt-32 pb-20 px-4 max-w-3xl mx-auto space-y-8">
@@ -108,7 +72,6 @@ export function BlogDetailPage() {
     );
   }
 
-  // Calculate Previous and Next articles for continuous reading
   const currentIndex = allBlogs.findIndex((b) => b.slug === slug);
   const prevBlog = currentIndex > 0 ? allBlogs[currentIndex - 1] : null;
   const nextBlog =
@@ -116,6 +79,7 @@ export function BlogDetailPage() {
       ? allBlogs[currentIndex + 1]
       : null;
 
+  // Sanitize HTML string
   const sanitizedContent = sanitizeHtml(blog.content);
 
   return (
@@ -130,7 +94,6 @@ export function BlogDetailPage() {
 
       {/* 2. Article Header */}
       <header className="space-y-6">
-        {/* Meta badges in meta-mono */}
         <div className="flex flex-wrap items-center gap-3 text-xs text-[#78716C] font-mono">
           <span className="flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5 text-[#A8A29E]" />
@@ -145,19 +108,16 @@ export function BlogDetailPage() {
           </span>
         </div>
 
-        {/* Display Title in Editorial Serif */}
         <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-normal tracking-tight text-[#141416] leading-[1.12]">
           {blog.title}
         </h1>
 
-        {/* Excerpt Lead */}
         {blog.excerpt && (
           <p className="text-lg text-[#44403C] leading-relaxed font-normal font-sans">
             {blog.excerpt}
           </p>
         )}
 
-        {/* Author Byline & Social Share Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 pb-6 border-y border-[#E7E2DA]">
           <div className="flex items-center gap-3">
             {about?.avatar_url ? (
@@ -186,7 +146,7 @@ export function BlogDetailPage() {
         </div>
       </header>
 
-      {/* 3. Cover Hero Image Framed with Hairline Border */}
+      {/* 3. Cover Hero Image */}
       {blog.cover_image_url && (
         <div className="overflow-hidden rounded-2xl md:rounded-3xl border border-[#E7E2DA] bg-[#F4EFEA] shadow-xs">
           <img
@@ -197,16 +157,15 @@ export function BlogDetailPage() {
         </div>
       )}
 
-      {/* 4. Sanitized Rich Text Prose Content constrained to 65ch for Ergonomics */}
-      <div className="editorial-prose paper-code-inspector prose prose-stone max-w-[65ch] mx-auto prose-headings:font-serif prose-headings:font-normal prose-headings:text-[#141416] prose-h1:text-3xl prose-h2:text-2xl md:prose-h2:text-3xl prose-h3:text-xl prose-p:text-[#44403C] prose-p:leading-[1.75] prose-p:font-sans prose-li:text-[#44403C] prose-strong:text-[#141416] prose-blockquote:border-l-2 prose-blockquote:border-[#C2410C] prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:font-serif prose-blockquote:text-[#141416] prose-code:font-mono prose-pre:p-0 prose-pre:border-none prose-pre:bg-transparent">
-        {sanitizedContent ? (
-          <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
-        ) : (
-          <p className="text-[#78716C] italic font-serif">Article content in preparation.</p>
-        )}
+      {/* 4. Sanitized HTML Blog Content (Pure HTML Renderer) */}
+      <div className="max-w-[65ch] mx-auto">
+        <BlogContentRenderer 
+          rawContent={sanitizedContent} 
+          blogTitle={blog.title} 
+        />
       </div>
 
-      {/* 5. Author Bio Card Callout */}
+      {/* 5. Author Bio Card */}
       <TactileCard className="p-6 md:p-8 bg-[#F4EFEA] border-[#E7E2DA] space-y-3">
         <h2 className="font-mono text-xs font-semibold text-[#141416] uppercase tracking-wider">
           // About the Author

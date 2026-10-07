@@ -93,7 +93,7 @@ export function DashboardPage() {
         </div>
 
         {/* Backend System Health Pill */}
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           {isSystemHealthy ? (
             <Badge variant="success" size="md" dot>
               API Services Operational
@@ -103,7 +103,7 @@ export function DashboardPage() {
               API Services Degraded
             </Badge>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* KPI Metric Stat Cards Grid */}
