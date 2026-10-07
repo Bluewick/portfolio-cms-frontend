@@ -10,7 +10,9 @@ import {
   Lightbulb, 
   AlertTriangle, 
   Bookmark, 
-  ChevronDown 
+  ChevronDown,
+  Cpu,
+  CheckCircle2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { highlightAll } from '../../../lib/prism';
@@ -46,11 +48,11 @@ function decodeEntitiesIfNeeded(str) {
   return str;
 }
 
-// 1. Enhanced CodeBlock: Supports File Paths, Diffs, and Architecture Diagrams
+// 1. Enhanced IDE-style CodeBlock: Supports File Paths, Diffs, and Architecture Diagrams
 function CodeBlock({ code, rawLanguage, filePath }) {
   const [copied, setCopied] = useState(false);
 
-  // Check if snippet is an ASCII/Unicode flow diagram
+  // Check if snippet is an ASCII/Unicode system architecture diagram
   const isDiagram =
     code.includes('↓') ||
     code.includes('→') ||
@@ -72,7 +74,7 @@ function CodeBlock({ code, rawLanguage, filePath }) {
       code.includes('SELECT ') ||
       code.includes('INSERT INTO') ||
       code.includes('ON CONFLICT') ||
-      code.includes('RETURNING')
+      code.includes('CREATE TABLE')
     ) {
       language = 'sql';
     } else if (
@@ -80,7 +82,6 @@ function CodeBlock({ code, rawLanguage, filePath }) {
       code.includes('req, res') ||
       code.includes('const ') ||
       code.includes('async ') ||
-      code.includes('await ') ||
       code.includes('=>')
     ) {
       language = 'javascript';
@@ -100,30 +101,37 @@ function CodeBlock({ code, rawLanguage, filePath }) {
 
   return (
     <div className="my-8 rounded-2xl border border-[#2B2A27] bg-[#141416] text-[#FAF8F5] shadow-sm overflow-hidden font-mono text-[13px]">
-      {/* Code Header Bar with File Path or Language Badge */}
+      {/* Code Header Bar with Traffic Dots, File Path or Language Badge */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#2B2A27] bg-[#1A1A1E]">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          {/* macOS-style Window Dots */}
+          <div className="flex items-center gap-1.5 mr-1 hidden sm:flex">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F56]/80 border border-[#E0443E]/40" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]/80 border border-[#DEA123]/40" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#27C93F]/80 border border-[#1AAB29]/40" />
+          </div>
+
           {filePath ? (
-            <>
+            <div className="flex items-center gap-1.5">
               <FileCode className="h-3.5 w-3.5 text-blue-400" />
               <span className="text-[11px] font-mono text-stone-200 tracking-wide font-medium">
                 {filePath}
               </span>
-            </>
+            </div>
           ) : isDiagram ? (
-            <>
+            <div className="flex items-center gap-1.5">
               <GitFork className="h-3.5 w-3.5 text-amber-400" />
               <span className="text-[11px] font-mono text-amber-300 uppercase tracking-wider font-semibold">
-                ARCHITECTURE // FLOW
+                SYSTEM ARCHITECTURE // FLOW
               </span>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="flex items-center gap-1.5">
               <Terminal className="h-3.5 w-3.5 text-stone-400" />
               <span className="text-[11px] font-mono text-stone-400 uppercase tracking-wider font-semibold">
                 {language}
               </span>
-            </>
+            </div>
           )}
         </div>
 
@@ -190,7 +198,7 @@ function HeadingWithAnchor({ level, id, children }) {
   const handleCopyAnchor = () => {
     const url = `${window.location.origin}${window.location.pathname}#${id}`;
     navigator.clipboard.writeText(url);
-    toast.success('Anchor link copied to clipboard');
+    toast.success('Section anchor copied to clipboard');
   };
 
   const Tag = level === 2 ? 'h2' : 'h3';
@@ -218,14 +226,18 @@ function HeadingWithAnchor({ level, id, children }) {
   );
 }
 
-// 3. Main HTML Content Renderer with Modern Serif Body
-export function BlogContentRenderer({ rawContent, blogTitle }) {
+// 3. Main Case Study Content Renderer
+export function ProjectContentRenderer({ rawContent, projectTitle }) {
   useEffect(() => {
     highlightAll();
   }, [rawContent]);
 
   if (!rawContent) {
-    return <p className="text-[#78716C] italic font-serif">Article content in preparation.</p>;
+    return (
+      <p className="text-[#78716C] italic font-serif">
+        Detailed architecture writeup forthcoming.
+      </p>
+    );
   }
 
   const cleanHtml = decodeEntitiesIfNeeded(rawContent);
@@ -235,7 +247,7 @@ export function BlogContentRenderer({ rawContent, blogTitle }) {
       // 1. Unwrap outer <article>
       if (domNode.name === 'article') {
         return (
-          <div className="blog-post-body space-y-6">
+          <div className="project-body space-y-6">
             {domToReact(domNode.children, options)}
           </div>
         );
@@ -244,16 +256,16 @@ export function BlogContentRenderer({ rawContent, blogTitle }) {
       // 2. Unwrap internal <header>
       if (domNode.name === 'header') {
         return (
-          <div className="blog-post-header space-y-4 mb-6">
+          <div className="project-header space-y-4 mb-6">
             {domToReact(domNode.children, options)}
           </div>
         );
       }
 
-      // 3. Remove duplicate H1 matching title
+      // 3. Remove duplicate H1 matching project title
       if (domNode.name === 'h1') {
         const text = extractText(domNode).trim();
-        if (!blogTitle || text.toLowerCase() === blogTitle.toLowerCase()) {
+        if (!projectTitle || text.toLowerCase() === projectTitle.toLowerCase()) {
           return <></>;
         }
         return (
@@ -276,7 +288,7 @@ export function BlogContentRenderer({ rawContent, blogTitle }) {
         );
       }
 
-      // 5. Editorial Lead Paragraph
+      // 5. Editorial Lead Paragraph (<p class="lead">)
       if (domNode.name === 'p' && domNode.attribs?.class?.includes('lead')) {
         return (
           <p className="text-xl sm:text-[1.35rem] font-serif leading-[1.75] italic text-[#141416] border-l-2 border-[#C2410C] pl-5 my-8">
@@ -285,30 +297,30 @@ export function BlogContentRenderer({ rawContent, blogTitle }) {
         );
       }
 
-      // 6. Semantic Callout / Admonition Boxes (<aside class="callout tip">)
+      // 6. Semantic Callouts & Architectural Admonition Boxes
       if (
         domNode.name === 'aside' &&
         domNode.attribs?.class?.includes('callout')
       ) {
-        const isTip = domNode.attribs.class.includes('tip');
-        const isWarning = domNode.attribs.class.includes('warning');
-        const isDeepDive = domNode.attribs.class.includes('deep-dive');
+        const isTip = domNode.attribs.class.includes('tip') || domNode.attribs.class.includes('decision');
+        const isWarning = domNode.attribs.class.includes('warning') || domNode.attribs.class.includes('bottleneck');
+        const isDeepDive = domNode.attribs.class.includes('deep-dive') || domNode.attribs.class.includes('benchmark');
 
-        let badge = 'NOTE';
+        let badge = 'SPEC // ARCHITECTURE NOTE';
         let icon = <Bookmark className="h-4 w-4 text-[#C2410C]" />;
         let borderClass = 'border-[#E7E2DA] bg-[#FAF8F5]';
 
         if (isTip) {
-          badge = 'PRO TIP // BEST PRACTICE';
+          badge = 'DECISION // ARCHITECTURAL CHOICE';
           icon = <Lightbulb className="h-4 w-4 text-amber-600" />;
           borderClass = 'border-amber-200 bg-amber-50/60';
         } else if (isWarning) {
-          badge = 'CAUTION // COMMON GOTCHA';
+          badge = 'CAUTION // BOTTLENECK & GOTCHA';
           icon = <AlertTriangle className="h-4 w-4 text-rose-600" />;
           borderClass = 'border-rose-200 bg-rose-50/60';
         } else if (isDeepDive) {
-          badge = 'DEEP DIVE // INTERNALS';
-          icon = <Terminal className="h-4 w-4 text-slate-700" />;
+          badge = 'BENCHMARK // INTERNALS & METRICS';
+          icon = <Cpu className="h-4 w-4 text-slate-700" />;
           borderClass = 'border-slate-300 bg-slate-50';
         }
 
@@ -325,7 +337,7 @@ export function BlogContentRenderer({ rawContent, blogTitle }) {
         );
       }
 
-      // 7. Collapsible Deep Dives (<details> / <summary>)
+      // 7. Collapsible Deep Dives & Secondary Logs (<details> / <summary>)
       if (domNode.name === 'details') {
         return (
           <details className="group my-8 rounded-2xl border border-[#E7E2DA] bg-[#FAF8F5] p-5 transition-all">
@@ -369,7 +381,7 @@ export function BlogContentRenderer({ rawContent, blogTitle }) {
         );
       }
 
-      // 10. Responsive Tables
+      // 10. Responsive Schema & API Tables
       if (domNode.name === 'table') {
         return (
           <div className="my-8 overflow-hidden rounded-2xl border border-[#E7E2DA] bg-white shadow-xs">
@@ -419,7 +431,7 @@ export function BlogContentRenderer({ rawContent, blogTitle }) {
   };
 
   return (
-    <div className="blog-prose-container prose prose-stone max-w-none prose-headings:font-serif prose-headings:text-[#141416] prose-p:font-serif prose-p:text-[1.125rem] sm:prose-p:text-[1.1875rem] prose-p:leading-[1.85] prose-p:text-[#292524] prose-li:font-serif prose-li:text-[1.0625rem] prose-li:leading-[1.8] prose-li:text-[#292524] prose-strong:text-[#141416] prose-strong:font-bold prose-blockquote:border-l-2 prose-blockquote:border-[#C2410C] prose-blockquote:pl-5 prose-blockquote:italic prose-blockquote:font-serif prose-blockquote:text-[#141416]">
+    <div className="project-prose-container prose prose-stone max-w-none prose-headings:font-serif prose-headings:text-[#141416] prose-p:font-serif prose-p:text-[1.125rem] sm:prose-p:text-[1.1875rem] prose-p:leading-[1.85] prose-p:text-[#292524] prose-li:font-serif prose-li:text-[1.0625rem] prose-li:leading-[1.8] prose-li:text-[#292524] prose-strong:text-[#141416] prose-strong:font-bold prose-blockquote:border-l-2 prose-blockquote:border-[#C2410C] prose-blockquote:pl-5 prose-blockquote:italic prose-blockquote:font-serif prose-blockquote:text-[#141416]">
       {parse(cleanHtml, options)}
     </div>
   );

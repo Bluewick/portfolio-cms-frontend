@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -13,7 +13,11 @@ import { TactileCard } from '../../components/portfolio/common/TactileCard';
 import { SkeletonLoader } from '../../components/portfolio/common/SkeletonLoader';
 import { SocialShareBar } from '../../components/portfolio/blogs/SocialShareBar';
 import { sanitizeHtml } from '../../lib/sanitize';
-import { BlogContentRenderer } from '../../components/portfolio/blogs/BlogContentRenderer';
+import { 
+  BlogContentRenderer, 
+  slugify 
+} from '../../components/portfolio/blogs/BlogContentRenderer';
+import { TableOfContents } from '../../components/portfolio/blogs/TableOfContents';
 
 function formatDate(dateString) {
   if (!dateString) return '';
@@ -24,13 +28,52 @@ function formatDate(dateString) {
   });
 }
 
+// Helper: Extracts all H2 and H3 headings for the Table of Contents
+function extractHeadingsFromHtml(html) {
+  if (!html) return [];
+  const regex = /<h([23])[^>]*>(.*?)<\/h\1>/gi;
+  const headings = [];
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    const level = parseInt(match[1], 10);
+    const text = match[2].replace(/<[^>]*>/g, '').trim();
+    if (text) {
+      headings.push({ id: slugify(text), text, level });
+    }
+  }
+  return headings;
+}
+
 export function BlogDetailPage() {
   const { slug } = useParams();
   const { data: blog, isLoading, error } = useBlogDetails(slug);
   const { data: blogData } = useBlogs({ limit: 10 });
   const { data: about } = useAbout();
 
+  const [readingProgress, setReadingProgress] = useState(0);
   const allBlogs = blogData?.blogs || [];
+
+  // Track scroll progress for the fixed top progress bar
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const currentProgress = (window.scrollY / totalHeight) * 100;
+        setReadingProgress(Math.min(100, Math.max(0, currentProgress)));
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const sanitizedContent = useMemo(() => {
+    return blog?.content ? sanitizeHtml(blog.content) : '';
+  }, [blog?.content]);
+
+  const headings = useMemo(() => {
+    return extractHeadingsFromHtml(sanitizedContent);
+  }, [sanitizedContent]);
 
   // 404 / Draft State Fallback
   if (error || (!isLoading && !blog)) {
@@ -79,140 +122,178 @@ export function BlogDetailPage() {
       ? allBlogs[currentIndex + 1]
       : null;
 
-  // Sanitize HTML string
-  const sanitizedContent = sanitizeHtml(blog.content);
-
   return (
-    <article className="pt-28 md:pt-36 pb-24 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto space-y-10">
-      {/* 1. Breadcrumbs */}
-      <Breadcrumb
-        items={[
-          { label: 'Technical Essays', href: '/blogs' },
-          { label: blog.title },
-        ]}
+    <>
+      {/* 1. Hairline Reading Progress Bar (Fixed Top) */}
+      <div
+        role="progressbar"
+        aria-valuenow={Math.round(readingProgress)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        className="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-[#C2410C] via-[#EA580C] to-[#C2410C] z-50 transition-all duration-75 origin-left"
+        style={{ width: `${readingProgress}%` }}
       />
 
-      {/* 2. Article Header */}
-      <header className="space-y-6">
-        <div className="flex flex-wrap items-center gap-3 text-xs text-[#78716C] font-mono">
-          <span className="flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5 text-[#A8A29E]" />
-            <span>{formatDate(blog.created_at)}</span>
-          </span>
-
-          <span className="text-[#E7E2DA]">•</span>
-
-          <span className="flex items-center gap-1 text-[#78716C] bg-[#F4EFEA] px-2.5 py-0.5 rounded-full border border-[#E7E2DA]">
-            <Clock className="h-3 w-3 text-[#A8A29E]" />
-            <span>{blog.reading_time_minutes || 3} min read</span>
-          </span>
+      <article className="pt-28 md:pt-36 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+        {/* 2. Breadcrumbs (Centered) */}
+        <div className="max-w-3xl mx-auto w-full">
+          <Breadcrumb
+            items={[
+              { label: 'Technical Essays', href: '/blogs' },
+              { label: blog.title },
+            ]}
+          />
         </div>
 
-        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-normal tracking-tight text-[#141416] leading-[1.12]">
-          {blog.title}
-        </h1>
+        {/* 3. Article Header (Centered) */}
+        <header className="space-y-6 max-w-3xl mx-auto w-full">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-[#78716C] font-mono">
+            <span className="flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5 text-[#A8A29E]" />
+              <span>{formatDate(blog.created_at)}</span>
+            </span>
 
-        {blog.excerpt && (
-          <p className="text-lg text-[#44403C] leading-relaxed font-normal font-sans">
-            {blog.excerpt}
-          </p>
+            <span className="text-[#E7E2DA]">•</span>
+
+            <span className="flex items-center gap-1 text-[#78716C] bg-[#F4EFEA] px-2.5 py-0.5 rounded-full border border-[#E7E2DA]">
+              <Clock className="h-3 w-3 text-[#A8A29E]" />
+              <span>{blog.reading_time_minutes || 4} min read</span>
+            </span>
+          </div>
+
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-normal tracking-tight text-[#141416] leading-[1.12]">
+            {blog.title}
+          </h1>
+
+          {blog.excerpt && (
+            <p className="text-xl sm:text-2xl text-[#44403C] leading-relaxed font-serif italic">
+              {blog.excerpt}
+            </p>
+          )}
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 pb-6 border-y border-[#E7E2DA]">
+            <div className="flex items-center gap-3">
+              {about?.avatar_url ? (
+                <img
+                  src={about.avatar_url}
+                  alt={about.name}
+                  className="h-10 w-10 rounded-full object-cover border border-[#E7E2DA] aspect-square"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full bg-[#141416] text-[#FAF8F5] font-serif flex items-center justify-center font-bold text-xs">
+                  {about?.name ? about.name[0] : 'A'}
+                </div>
+              )}
+              <div>
+                <p className="font-mono text-[10px] text-[#78716C] uppercase tracking-wider">
+                  // AUTHOR BYLINE
+                </p>
+                <p className="font-serif font-bold text-sm text-[#141416]">
+                  {about?.name || 'Alex Mercer'}
+                </p>
+              </div>
+            </div>
+
+            <SocialShareBar title={blog.title} />
+          </div>
+        </header>
+
+        {/* 4. Cover Hero Banner (Centered) */}
+        {blog.cover_image_url && (
+          <div className="max-w-3xl mx-auto w-full overflow-hidden rounded-2xl md:rounded-3xl border border-[#E7E2DA] bg-[#F4EFEA] shadow-xs">
+            <img
+              src={blog.cover_image_url}
+              alt={blog.title}
+              className="w-full aspect-video object-cover"
+            />
+          </div>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 pb-6 border-y border-[#E7E2DA]">
-          <div className="flex items-center gap-3">
-            {about?.avatar_url ? (
-              <img
-                src={about.avatar_url}
-                alt={about.name}
-                className="h-10 w-10 rounded-full object-cover border border-[#E7E2DA] aspect-square"
-                loading="lazy"
-              />
-            ) : (
-              <div className="h-10 w-10 rounded-full bg-[#141416] text-[#FAF8F5] font-serif flex items-center justify-center font-bold text-xs">
-                {about?.name ? about.name[0] : 'A'}
-              </div>
-            )}
-            <div>
-              <p className="font-mono text-[10px] text-[#78716C] uppercase tracking-wider">
-                // AUTHOR BYLINE
-              </p>
-              <p className="font-serif font-bold text-sm text-[#141416]">
-                {about?.name || 'Alex Mercer'}
-              </p>
+        {/* 5. Symmetrical 3-Column Layout: Left Spacer / Centered Content / Right Sticky TOC */}
+        <div className="xl:grid xl:grid-cols-[240px_minmax(0,1fr)_240px] xl:gap-10 items-start">
+          {/* Left Column: Symmetrical rail with sticky back navigation to maintain dead-center alignment */}
+          <div className="hidden xl:block">
+            <div className="sticky top-28 self-start">
+              <Link
+                to="/blogs"
+                className="inline-flex items-center gap-2 text-xs font-mono text-[#78716C] hover:text-[#C2410C] transition-colors group"
+              >
+                <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" />
+                <span>All Essays</span>
+              </Link>
             </div>
           </div>
 
-          <SocialShareBar title={blog.title} />
+          {/* Center Column: Perfectly Centered Reading Column */}
+          <div className="min-w-0 max-w-3xl mx-auto w-full">
+            {/* Mobile / Tablet Collapsible Outline Only */}
+            <TableOfContents headings={headings} variant="mobile" />
+
+            {/* Publication Serif Body Content */}
+            <BlogContentRenderer 
+              rawContent={sanitizedContent} 
+              blogTitle={blog.title} 
+            />
+          </div>
+
+          {/* Right Column: Desktop Sticky Table of Contents Rail Only */}
+          <div className="hidden xl:block">
+            <TableOfContents headings={headings} variant="desktop" />
+          </div>
         </div>
-      </header>
 
-      {/* 3. Cover Hero Image */}
-      {blog.cover_image_url && (
-        <div className="overflow-hidden rounded-2xl md:rounded-3xl border border-[#E7E2DA] bg-[#F4EFEA] shadow-xs">
-          <img
-            src={blog.cover_image_url}
-            alt={blog.title}
-            className="w-full aspect-video object-cover"
-          />
+        {/* 6. Author Bio Card (Centered) */}
+        <div className="max-w-3xl mx-auto w-full pt-8">
+          <TactileCard className="p-6 md:p-8 bg-[#F4EFEA] border-[#E7E2DA] space-y-3">
+            <h2 className="font-mono text-xs font-semibold text-[#141416] uppercase tracking-wider">
+              // About the Author
+            </h2>
+            <p className="font-serif text-base text-[#44403C] leading-relaxed">
+              <strong className="text-[#141416]">{about?.name || 'Alex Mercer'}</strong> is a{' '}
+              {about?.title || 'Principal Backend & Systems Architect'}.{' '}
+              {about?.bio ||
+                'Passionate about distributed databases, event-driven architectures, and high-concurrency Node.js microservices.'}
+            </p>
+          </TactileCard>
         </div>
-      )}
 
-      {/* 4. Sanitized HTML Blog Content (Pure HTML Renderer) */}
-      <div className="max-w-[65ch] mx-auto">
-        <BlogContentRenderer 
-          rawContent={sanitizedContent} 
-          blogTitle={blog.title} 
-        />
-      </div>
+        {/* 7. Previous & Next Article Navigation (Centered) */}
+        <div className="max-w-3xl mx-auto w-full pt-10 border-t border-[#E7E2DA] grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {prevBlog ? (
+            <Link
+              to={`/blogs/${prevBlog.slug}`}
+              className="p-5 rounded-2xl border border-[#E7E2DA] bg-white hover:border-[#D6CFC4] hover:bg-[#FAF8F5] transition-all group flex flex-col justify-between space-y-2 shadow-xs"
+            >
+              <div className="flex items-center gap-1.5 text-xs text-[#78716C] font-mono">
+                <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
+                <span>// PREVIOUS ESSAY</span>
+              </div>
+              <span className="font-serif text-base text-[#141416] line-clamp-1 group-hover:text-[#C2410C]">
+                {prevBlog.title}
+              </span>
+            </Link>
+          ) : (
+            <div />
+          )}
 
-      {/* 5. Author Bio Card */}
-      <TactileCard className="p-6 md:p-8 bg-[#F4EFEA] border-[#E7E2DA] space-y-3">
-        <h2 className="font-mono text-xs font-semibold text-[#141416] uppercase tracking-wider">
-          // About the Author
-        </h2>
-        <p className="text-sm text-[#44403C] leading-relaxed font-normal font-sans">
-          <strong className="text-[#141416]">{about?.name || 'Alex Mercer'}</strong> is a{' '}
-          {about?.title || 'Principal Backend & Systems Architect'}.{' '}
-          {about?.bio ||
-            'Passionate about distributed databases, event-driven architectures, and high-concurrency Node.js microservices.'}
-        </p>
-      </TactileCard>
-
-      {/* 6. Previous & Next Article Navigation */}
-      <div className="pt-10 mt-14 border-t border-[#E7E2DA] grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {prevBlog ? (
-          <Link
-            to={`/blogs/${prevBlog.slug}`}
-            className="p-5 rounded-2xl border border-[#E7E2DA] bg-white hover:border-[#D6CFC4] hover:bg-[#FAF8F5] transition-all group flex flex-col justify-between space-y-2 shadow-xs"
-          >
-            <div className="flex items-center gap-1.5 text-xs text-[#78716C] font-mono">
-              <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
-              <span>// PREVIOUS ESSAY</span>
-            </div>
-            <span className="font-serif text-base text-[#141416] line-clamp-1 group-hover:text-[#C2410C]">
-              {prevBlog.title}
-            </span>
-          </Link>
-        ) : (
-          <div />
-        )}
-
-        {nextBlog && (
-          <Link
-            to={`/blogs/${nextBlog.slug}`}
-            className="p-5 rounded-2xl border border-[#E7E2DA] bg-white hover:border-[#D6CFC4] hover:bg-[#FAF8F5] transition-all group flex flex-col justify-between space-y-2 text-right shadow-xs"
-          >
-            <div className="flex items-center justify-end gap-1.5 text-xs text-[#78716C] font-mono">
-              <span>// NEXT ESSAY</span>
-              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
-            </div>
-            <span className="font-serif text-base text-[#141416] line-clamp-1 group-hover:text-[#C2410C]">
-              {nextBlog.title}
-            </span>
-          </Link>
-        )}
-      </div>
-    </article>
+          {nextBlog && (
+            <Link
+              to={`/blogs/${nextBlog.slug}`}
+              className="p-5 rounded-2xl border border-[#E7E2DA] bg-white hover:border-[#D6CFC4] hover:bg-[#FAF8F5] transition-all group flex flex-col justify-between space-y-2 text-right shadow-xs"
+            >
+              <div className="flex items-center justify-end gap-1.5 text-xs text-[#78716C] font-mono">
+                <span>// NEXT ESSAY</span>
+                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+              </div>
+              <span className="font-serif text-base text-[#141416] line-clamp-1 group-hover:text-[#C2410C]">
+                {nextBlog.title}
+              </span>
+            </Link>
+          )}
+        </div>
+      </article>
+    </>
   );
 }
 
