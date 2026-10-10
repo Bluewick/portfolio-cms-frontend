@@ -125,7 +125,7 @@ export function PortfolioNavbar() {
           >
             <div className="relative">
               <div className="h-8 w-8 rounded-full bg-[#141416] text-[#FAF8F5] flex items-center justify-center font-serif text-sm font-semibold tracking-wider transition-transform duration-200 group-hover:scale-105 border border-[#141416]">
-                {about?.name ? about.name.split(' ').map((n) => n[0]).join('') : 'AM'}
+                {about?.name ? about.name.split(' ').map((n) => n[0]).join('') : 'V'}
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
@@ -134,7 +134,7 @@ export function PortfolioNavbar() {
             </div>
             <div className="hidden sm:flex flex-col">
               <span className="font-serif font-semibold text-sm tracking-tight text-[#141416]">
-                {about?.name || 'Alex Mercer'}
+                {about?.name || 'Vivek'}
               </span>
               {currentTime && (
                 <span className="text-[10px] font-mono text-[#78716C] leading-none">
